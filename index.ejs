@@ -10,6 +10,9 @@
 <form action ="/addtask" method="POST">
 <input type="text" name="newtask" placeholder="add new task">
 <button> Add a Task </button>
+<% for( var i=0; i < tasks.length; i++){ %>
+                <li><input type="checkbox" name="check" value="<%= tasks[i] %>" /><%= tasks[i] %></li>
+            <% } %>
 <h2> Tasks </h2>
 <button formaction="/removetask" type="submit"> Remove Task </button>
 </form>

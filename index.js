@@ -2,14 +2,28 @@
 var express = require('express');
 //require body-paser
 var bodyParser = require("body-parser");
+//require mongoose
+var mongoose = require("mongoose");
 
 //create express object, call express
 var app = express();
+//get port information
+const port = process.env.PORT || 3000;
+
 
 //tell application to use EJS for templetes
 app.set('view engine', 'ejs');
+//make styles public
+app.use(express.static("public"));
 //tell app to use Body parser
 app.use(bodyParser.urlencoded({extended:true}))
+
+//connection information for Mongo
+
+const mongoDB = 'mongodb+srv://testConnection:b8RwqJYgo4hD1xhe@nodetodoexample-iqnde.mongodb.net/test?retryWrites=true&w=majority';
+mongoose.connect(mongoDB);
+mongoose.Promise=global.Promise;
+let db = mongoose.connection;
 
 //couple of items items
 var tasks=["make it to class","take child to daycare"];
@@ -49,6 +63,6 @@ app.post('/removetask', function(req, res){
 app.post()
 
 //server setup
-app.listen(3000, function(){
+app.listen(port, function(){
     console.log('Listening!')
 });

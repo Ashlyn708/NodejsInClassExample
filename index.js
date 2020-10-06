@@ -32,11 +32,13 @@ var completed=[];
 
 //get home page /
 app.get('/', function(req, res){
-  /query to mongoDB for todos
+  //query to mongoDB for todos
     Todo.find(function(err, todo){
         if(err){
             console.log(err);
         }else{
+            tasks = [];
+            completed = [];
             for(i = 0; i< todo.length; i++){
                 if(todo[i].done){
                     completed.push(todo[i].item)
@@ -46,34 +48,47 @@ app.get('/', function(req, res){
             }
         }
     });
-    
+
     //return something to home page
     res.render('index', {tasks: tasks, completed: completed}); //add completed variable to ejs ex {a:a, b:b}
 }); 
 
 //add post method/ addtask
 app.post('/addtask', function(req,res){
-    var newTask = req.body.newTask;
-    console.log("newTask");
-    tasks.push(newTask);
-    //return index
-    res.render('index');
+    let newTodo = new Todo({
+        item: req.body.newtask,
+        done: false
+    })
+    newTodo.save(function(err, todo){
+        if (err){
+            console.log(err)
+        } else {
+            //return index
+            res.redirect('/');
+        }
+    });
 });
 
 app.post('/removetask', function(req, res){
-    var removeTask = req.body.check;
+    var id = req.body.check;
     //push to completed
-    if(typeof removeTask === 'string'){
-        tasks.splice(tasks.indexOf(removeTask), 1);
-        completed.push(removeTask);
-    }else if(typeof removeTask === 'object'){
+    if(typeof id === 'string'){
+        Todo.updateOne{_id:removeTask},{done:true},function(err){
+            console.log(err);
+        }
+    })
+    }else if(typeof id === 'object'){
         for (var i = 0; i < removeTask.length; i++){
             tasks.splice(tasks.indexOf(removeTask[i]), 1);
         }
     }
     res.redirect('/');
 });
-
+app.post('/delete', function(){
+    // write the function for delete using ID
+    // handle for single and multiple delete requests (req.body.delete)
+    // Todo.deleteOne(id, function(err){})
+})
 app.post()
 
 //server setup
